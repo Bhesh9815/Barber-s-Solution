@@ -1,0 +1,28 @@
+.user-menu {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    position: absolute;
+    right: 20px;
+    top: 10px;
+}
+
+.username {
+    font-weight: bold;
+    color: white;
+    background: #007bff;
+    padding: 8px 12px;
+    border-radius: 20px;
+}
+
+.logout-btn {
+    background: red;
+    color: white;
+    padding: 8px 12px;
+    border-radius: 20px;
+    text-decoration: none;
+}
+
+.logout-btn:hover {
+    background: darkred;
+}

@@ -1,0 +1,183 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>User Registration</title>
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css?family=Roboto:400,500,700&display=swap" rel="stylesheet">
+    <!-- Icons (Font Awesome) -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" />
+    <!-- External CSS -->
+    <link rel="stylesheet" type="text/css" href="style.css">
+</head>
+<style>
+    .select-form {
+        width: 50%;
+        padding: 10px;
+        margin-top: 10px;
+        border: 2px solid #ccc;
+        border-radius: 5px;
+        background-color: white;
+        font-size: 16px;
+        cursor: pointer;
+    }
+    .error {
+        color: red;
+        font-size: 0.8em;
+        display: none; /* Initially hide the error messages */
+        margin-top: 5px;
+    }
+    .error.show {
+        display: block; /* Show the error when needed */
+    }
+</style>
+<body>
+    <!-- Header -->
+    <header>
+        <div class="logo">
+            <img src="logo.png" alt="Logo">
+            <span>Barber's Solution</span> <!-- for inline element -->
+        </div>
+        <nav>
+            <a href="#home" id="nav-home">Home</a>
+            <a href="#about" id="nav-about">About</a>
+            <a href="#services" id="nav-services">Services</a>
+            <a href="#contact" id="nav-contact">Contact</a>
+        </nav>
+    </header>
+
+    <!-- Login/Register Section -->
+    <section id="login">
+        <h2>Create an account</h2>
+        <div class="form-container">
+            <div class="login-form-user">
+                <h3>Register</h3>
+                <form id="registrationForm" action="http://localhost/BarberSystem/user_register.php" method="POST" enctype="multipart/form-data">
+                    <select class="select-form" name="role" id="role">
+                        <option disabled selected>Select Role</option>
+                        <option value="Admin">Admin</option>
+                        <option value="User">User</option>
+                    </select>
+                    <span id="roleError" class="error"></span><br> <!-- Added roleError span -->
+                    <input type="text" name="name" id="name" placeholder="Enter your fullname" required><span id="nameError" class="error"></span><br>
+                    <input type="email" name="email" id="email" placeholder="Enter your Email" required><span id="emailError" class="error"></span><br>
+                    <input type="tel" id="phone" name="phone" placeholder="Contact" required><span id="phoneError" class="error"></span><br>
+                    <input type="password" name="password" id="password" placeholder="Password" required><span id="passwordError" class="error"></span><br>
+                    <button type="submit">Register</button><br>
+                    Already have an account? <a href="Barbers Solution.html#login" style="color: blue;"> Login</a> <br>
+                   
+                </form>
+            </div>
+        </div>
+    </section>
+
+    <script>
+        const nameInput = document.getElementById('name');
+        const emailInput = document.getElementById('email');
+        const phoneInput = document.getElementById('phone');
+        const passwordInput = document.getElementById('password');
+        const roleInput = document.getElementById('role');
+
+        const nameError = document.getElementById('nameError');
+        const emailError = document.getElementById('emailError');
+        const phoneError = document.getElementById('phoneError');
+        const passwordError = document.getElementById('passwordError');
+        const roleError = document.getElementById('roleError'); // Added roleError
+
+        nameInput.addEventListener('input', validateName);
+        emailInput.addEventListener('input', validateEmail);
+        phoneInput.addEventListener('input', validatePhone);
+        passwordInput.addEventListener('input', validatePassword);
+        roleInput.addEventListener('change', validateRole);
+
+        function validateName() {
+            nameInput.value = nameInput.value.replace(/^[ ]+|[^a-zA-Z\s]/g, ''); // Remove leading spaces and non-alphabetic characters
+            if (!nameInput.value.trim()) {
+                nameError.textContent = "Valid Name is required.";
+                nameError.classList.add('show');
+            } else {
+                nameError.textContent = "";
+                nameError.classList.remove('show');
+            }
+        }
+
+        function validateEmail() {
+            if (!emailInput.value.trim()) {
+                emailError.textContent = "Valid Email is required.";
+                emailError.classList.add('show');
+            } else if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(emailInput.value)) {
+                emailError.textContent = "Invalid email format.";
+                emailError.classList.add('show');
+            } else {
+                emailError.textContent = "";
+                emailError.classList.remove('show');
+            }
+        }
+
+        function validatePhone() {
+            phoneInput.value = phoneInput.value.replace(/[^0-9+-\s]/g, ''); // Allow only numbers, +, -, and spaces
+            phoneInput.value = phoneInput.value.replace(/^[ ]+/g, ''); // Remove leading spaces.
+
+            // Limit to 10 digits (excluding +977 or country code)
+            let digitsOnly = phoneInput.value.replace(/[^0-9]/g, '');
+            if (digitsOnly.length > 10) {
+                phoneInput.value = phoneInput.value.slice(0, phoneInput.value.length - (digitsOnly.length - 10));
+            }
+
+            if (!phoneInput.value.trim()) {
+                phoneError.textContent = "Contact is required.";
+                phoneError.classList.add('show');
+            } else if (!/^(\+977-?|0)?9[78]\d{8}$/.test(phoneInput.value)) {
+                phoneError.textContent = "Invalid Nepali phone number format.";
+                phoneError.classList.add('show');
+            } else {
+                phoneError.textContent = "";
+                phoneError.classList.remove('show');
+            }
+        }
+
+        function validatePassword() {
+            const password = passwordInput.value;
+            const hasUpperCase = /[A-Z]/.test(password);
+            const hasLowerCase = /[a-z]/.test(password);
+            const hasNumber = /[0-9]/.test(password);
+            const hasSpecialChar = /[^A-Za-z0-9\s]/.test(password);
+
+            if (!password) {
+                passwordError.textContent = "Password is required.";
+                passwordError.classList.add('show');
+            } else if (password.length < 8) {
+                passwordError.textContent = "Password must be at least 8 characters long, must contain, 1 uppercase letter, 1 lowercase letter, 1 number, and 1 special character.";
+                passwordError.classList.add('show');
+            } else if (!hasUpperCase || !hasLowerCase || !hasNumber || !hasSpecialChar) {
+                passwordError.textContent = "Password must contain at least 1 uppercase letter, 1 lowercase letter, 1 number, and 1 special character.";
+                passwordError.classList.add('show');
+            } else {
+                passwordError.textContent = "";
+                passwordError.classList.remove('show');
+            }
+        }
+
+        function validateRole() {
+            if (!roleInput.value || (roleInput.value !== "User" && roleInput.value !== "Admin")) {
+                roleError.textContent = "Please select a valid role.";
+                roleError.classList.add('show');
+            } else {
+                roleError.textContent = "";
+                roleError.classList.remove('show');
+            }
+        }
+    </script>
+
+    <!-- Footer -->
+    <footer>
+        <p>&copy; 2024 Barber's Token System. All Rights Reserved.</p>
+        <div class="social-media">
+            <a href="#"><i class="fab fa-facebook-f"></i></a>
+            <a href="#"><i class="fab fa-twitter"></i></a>
+            <a href="#"><i class="fab fa-instagram"></i></a>
+        </div>
+    </footer>
+</body>
+</html>
